@@ -23,6 +23,11 @@ class ScatterPlot(TradeOffVisualisation):
 
 
     def plot(self, Y, colours=None):
+        """
+        Produce a scatter plot of the solution set Y. If it's a 2-objective or
+        3-objective solution set, use a 2- or 3-dimensional scatter plot. If M>3,
+        use a pairwise box plot.
+        """
         fig = plt.figure()
         N, M = Y.shape
 
@@ -46,11 +51,3 @@ class ScatterPlot(TradeOffVisualisation):
             ax.set_xlabel(self.xlabel)
         if not self.ylabel is None:
             ax.set_ylabel(self.ylabel)
-                
-
-
-"""
-        Produce a scatter plot of the solution set Y. If it's a 2-objective or
-        3-objective solution set, use a 2- or 3-dimensional scatter plot. If M>3,
-        use a pairwise box plot.
-        """
