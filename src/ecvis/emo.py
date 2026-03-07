@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import scipy.spatial.distance as spd
 import sklearn.manifold as skm
 import sklearn.ensemble as ske
+import ecvis.rank as rk
 from abc import ABC, abstractmethod
 
 
@@ -152,3 +153,18 @@ class MDSVisualisation(TradeOffVisualisation):
                     plt.plot([x0,x1], [y0,y1], c="k", lw=2)
 
                 plt.text(pts[-1,0], pts[-1,1], str(m+1), fontweight="bold")
+
+
+        if best_obj:
+            R = rk.rank_coordinates(Y)
+            for m in range(M):
+                best = R[:,m].argmin()
+                worst = R[:,m].argmax()
+
+                i, j = Z[best,:]+Zsamples.ptp()*np.random.uniform(0.05,0.1)
+                plt.text(i, j, str(m+1), fontweight="bold", c="blue")
+                plt.plot([i,Z[best,0]], [j,Z[best,1]], c="#969696")
+
+                i, j = Z[worst,:]+Zsamples.ptp()*np.random.uniform(0.05,0.1)
+                plt.text(i, j, str(m+1), fontweight="bold", c="red")
+                plt.plot([i,Z[worst,0]], [j,Z[worst,1]], c="#969696")
