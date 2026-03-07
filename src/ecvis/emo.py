@@ -34,20 +34,40 @@ class ScatterPlot(TradeOffVisualisation):
         if colours is None:
             colours = ['k'] * N
 
-        if M == 2:
-            ax = fig.add_subplot(111)
-            ax.scatter(Y[:,0], Y[:,1], c=colours)
-            ax.set_aspect('equal', 'box')
+        if M in [2,3]:
+            if M == 2:
+                ax = fig.add_subplot(111)
+                ax.scatter(Y[:,0], Y[:,1], c=colours)
+                ax.set_aspect('equal', 'box')
 
-        if M == 3:
-            ax = fig.add_subplot(111, projection="3d")
-            ax.scatter(Y[:,0], Y[:,1], Y[:,2], c=colours)
+            if M == 3:
+                ax = fig.add_subplot(111, projection="3d")
+                ax.scatter(Y[:,0], Y[:,1], Y[:,2], c=colours)
 
-            if not self.zlabel is None:
-                ax.set_zlabel(self.zlabel)
-        
+                if not self.zlabel is None:
+                    ax.set_zlabel(self.zlabel)            
 
-        if not self.xlabel is None:
-            ax.set_xlabel(self.xlabel)
-        if not self.ylabel is None:
-            ax.set_ylabel(self.ylabel)
+            if not self.xlabel is None:
+                ax.set_xlabel(self.xlabel)
+            if not self.ylabel is None:
+                ax.set_ylabel(self.ylabel)
+        else:
+
+            fig, axes = plt.subplots(M, M, sharex='col', sharey='row')
+
+            for r in range(M):
+                for c in range(M):
+                    ax = axes[r, c]
+                    if r < c:
+                        ax.scatter(Y[:, c], Y[:, r])
+                        #ax.set_aspect('equal', 'box')
+                        # tidy ticks
+                        ax.tick_params(labelsize=8)
+                        # titles / labels to reduce clutter
+                    elif r == c:
+                        ax.hist(Y[:, r], bins=20, color='0.6', alpha=0.8)
+                        ax.set_aspect('auto')  # histogram axes can be auto
+                    else:
+                        ax.axis('off')
+
+            fig.tight_layout()
