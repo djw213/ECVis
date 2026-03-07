@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import scipy.spatial.distance as spd
+import sklearn.manifold as skm
 from abc import ABC, abstractmethod
 
 
@@ -107,3 +109,24 @@ class ParallelCoordinatePlot(TradeOffVisualisation):
 
         ax.set_xlabel("Objective")
         ax.set_ylabel("Objective value")
+
+
+
+class MDSVisualisation(TradeOffVisualisation):
+
+    def __init__(self):
+        TradeOffVisualisation.__init__(self)
+
+
+    def plot(self, Y, distance_matrix=None, colours=None):
+        N = Y.shape[0]
+        D = spd.cdist(Y, Y)
+        mds = skm.MDS(metric='precomputed', metric_mds=True, init="classical_mds")
+        Z = mds.fit_transform(D)
+
+        if colours is None:
+            colours = ["k"]*N
+
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+        ax.scatter(Z[:,0], Z[:,1], c=colours)
