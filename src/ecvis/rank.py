@@ -3,3 +3,20 @@ import scipy.stats as st
 
 
 
+def average_rank(Y):
+    """
+    Compute the average rank of the objective vector in the array Y.
+
+    @param A matrix Y in which each row represents a solution's objective vector
+    and each column represents an objective.
+    @return A Numpy array in which element i is the average rank of solution i.
+    """
+    N, M = Y.shape
+    R = np.zeros_like(Y)
+
+    for m in range(M):
+        R[:,m] = st.rankdata(Y[:,m])
+
+    r = R.mean(axis=1)
+    assert r.shape[0] == N
+    return r
