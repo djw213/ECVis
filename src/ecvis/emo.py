@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.spatial.distance as spd
 import sklearn.manifold as skm
+import sklearn.ensemble as ske
 from abc import ABC, abstractmethod
 
 
@@ -118,15 +119,36 @@ class MDSVisualisation(TradeOffVisualisation):
         TradeOffVisualisation.__init__(self)
 
 
-    def plot(self, Y, distance_matrix=None, colours=None):
-        N = Y.shape[0]
+    def plot(self, Y, distance_matrix=None, colours=None, best_obj=False, plot_axes=False):
+        N, M = Y.shape
         D = spd.cdist(Y, Y)
         mds = skm.MDS(metric='precomputed', metric_mds=True, init="classical_mds")
         Z = mds.fit_transform(D)
+
+        rf = ske.RandomForestRegressor()
+        rf.fit(Y, Z)
+        Zp = rf.predict(Y)
 
         if colours is None:
             colours = ["k"]*N
 
         fig = plt.figure()
         ax = fig.add_subplot(111)
-        ax.scatter(Z[:,0], Z[:,1], c=colours)
+        ax.scatter(Zp[:,0], Zp[:,1], c=colours)
+
+        if plot_axes:
+            # Build a dataset comprising samples along the coordinate axes.
+            Nsamples = 30
+            axes_samples = np.zeros((Nsamples*M, M))
+
+            for m in range(M):
+                axes_samples[m*Nsamples:(m+1)*Nsamples,m] = np.linspace(0, Y[:,m].max(), Nsamples)
+
+            Zsamples = rf.predict(axes_samples)
+            
+            for m in range(M):
+                pts = Zsamples[m*Nsamples:(m+1)*Nsamples,:]
+                for (x0,y0), (x1,y1) in zip(pts[:-2,:], pts[1:-1,:]):
+                    plt.plot([x0,x1], [y0,y1], c="k", lw=2)
+
+                plt.text(pts[-1,0], pts[-1,1], str(m+1), fontweight="bold")
