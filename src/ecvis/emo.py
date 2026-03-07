@@ -77,7 +77,33 @@ class ParallelCoordinatePlot(TradeOffVisualisation):
         TradeOffVisualisation.__init__(self)
 
     
-    def plot(self, Y, colours=None):
+    def plot(self, Y, colours=None, objective_labels=None, rot=0, filter=None):
         """
         """
-        pass
+        N, M = Y.shape
+
+        fig = plt.figure(figsize=(8,4))
+        ax = fig.add_subplot(111)
+
+        filtered = "#DADADA"
+
+        for i in range(N):
+            col = "k"
+            zo = 1
+            if not filter is None:
+                for m in range(M):
+                    if not filter[m] is None and (Y[i,m] < filter[m][0] or Y[i,m] > filter[m][1]):
+                        col = filtered
+            if not colours is None and not col == filtered:
+                col = colours[i]
+                zo = 2
+            
+            ax.plot(np.arange(M), Y[i], c=col, zorder=zo)
+
+        if objective_labels is None:
+            ax.set_xticks(np.arange(M), np.arange(M, dtype=int)+1)
+        else:
+            ax.set_xticks(np.arange(M), objective_labels, rotation=rot)
+
+        ax.set_xlabel("Objective")
+        ax.set_ylabel("Objective value")
