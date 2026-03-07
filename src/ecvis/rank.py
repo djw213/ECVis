@@ -18,5 +18,5 @@ def average_rank(Y):
         R[:,m] = st.rankdata(Y[:,m])
 
     r = R.mean(axis=1)
-    assert r.shape[0] == N
+    assert r.shape[0] == N, "Incorrect number of solutions in rank array"
     return r
