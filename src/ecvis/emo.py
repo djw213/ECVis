@@ -68,3 +68,16 @@ class ScatterPlot(TradeOffVisualisation):
                     if not c == r:
                         ax.set_xticks([])
                         ax.set_yticks([])
+
+
+
+class ParallelCoordinatePlot(TradeOffVisualisation):
+
+    def __init__(self):
+        TradeOffVisualisation.__init__(self)
+
+    
+    def plot(self, Y, colours=None):
+        """
+        """
+        pass
