@@ -53,21 +53,18 @@ class ScatterPlot(TradeOffVisualisation):
                 ax.set_ylabel(self.ylabel)
         else:
 
-            fig, axes = plt.subplots(M, M, sharex='col', sharey='row')
+            fig = plt.figure()
+
+            Ymin, Ymax = Y.min(), Y.max()
 
             for r in range(M):
                 for c in range(M):
-                    ax = axes[r, c]
-                    if r < c:
-                        ax.scatter(Y[:, c], Y[:, r])
-                        #ax.set_aspect('equal', 'box')
-                        # tidy ticks
-                        ax.tick_params(labelsize=8)
-                        # titles / labels to reduce clutter
-                    elif r == c:
-                        ax.hist(Y[:, r], bins=20, color='0.6', alpha=0.8)
-                        ax.set_aspect('auto')  # histogram axes can be auto
-                    else:
-                        ax.axis('off')
+                    if c >= r:
+                        ax = fig.add_subplot(M, M, ((M*r)+c)+1)
+                        ax.scatter(Y[:,r], Y[:,c])
+                        ax.set_xlim(Ymin, Ymax)
+                        ax.set_ylim(Ymin, Ymax)
 
-            fig.tight_layout()
+                    if not c == r:
+                        ax.set_xticks([])
+                        ax.set_yticks([])
