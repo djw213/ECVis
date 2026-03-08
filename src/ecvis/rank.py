@@ -36,3 +36,15 @@ def average_rank(Y):
     r = R.mean(axis=1)
     assert r.shape[0] == N, "Incorrect number of solutions in rank array"
     return r
+
+
+def dominance_distance(Y):
+    N, M = Y.shape
+    R = rank_coordinates(Y)
+
+    D = np.zeros((N, N))
+    for i in range(N):
+        for j in range(N):
+            D[i,j] = (1/M) * abs(R[i] - R[j]).sum()
+
+    return D

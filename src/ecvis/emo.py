@@ -122,9 +122,10 @@ class MDSVisualisation(TradeOffVisualisation):
 
     def plot(self, Y, distance_matrix=None, colours=None, best_obj=False, plot_axes=False):
         N, M = Y.shape
-        D = spd.cdist(Y, Y)
+        if distance_matrix is None:
+            distance_matrix = spd.cdist(Y, Y)
         mds = skm.MDS(metric='precomputed', metric_mds=True, init="classical_mds")
-        Z = mds.fit_transform(D)
+        Z = mds.fit_transform(distance_matrix)
 
         rf = ske.RandomForestRegressor()
         rf.fit(Y, Z)
@@ -161,10 +162,10 @@ class MDSVisualisation(TradeOffVisualisation):
                 best = R[:,m].argmin()
                 worst = R[:,m].argmax()
 
-                i, j = Z[best,:]+Zsamples.ptp()*np.random.uniform(0.05,0.1)
+                i, j = Zp[best,:]+(Zsamples.ptp()*np.random.uniform(0.05,0.1))
                 plt.text(i, j, str(m+1), fontweight="bold", c="blue")
-                plt.plot([i,Z[best,0]], [j,Z[best,1]], c="#969696")
+                plt.plot([i,Zp[best,0]], [j,Zp[best,1]], c="#969696")
 
-                i, j = Z[worst,:]+Zsamples.ptp()*np.random.uniform(0.05,0.1)
+                i, j = Z[worst,:]+(Zsamples.ptp()*np.random.uniform(0.05,0.1))
                 plt.text(i, j, str(m+1), fontweight="bold", c="red")
-                plt.plot([i,Z[worst,0]], [j,Z[worst,1]], c="#969696")
+                plt.plot([i,Zp[worst,0]], [j,Zp[worst,1]], c="#969696")
