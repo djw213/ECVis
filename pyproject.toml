@@ -1,0 +1,51 @@
+
+[build-system]
+requires = ["setuptools>=69", "wheel"]       # PEP 517 build backend + wheel support
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ecvis"
+version = "0.1.0"
+description = "Short description of ecvis"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }                    # or use {file = "LICENSE"}
+authors = [
+  { name = "David Walker", email = "D.J.Walker2@exeter.ac.uk" }
+]
+
+# List your runtime dependencies here (if any), e.g.:
+# dependencies = [
+#   "numpy>=1.23",
+#   "requests>=2.31"
+# ]
+
+# Optional PyPI metadata (uncomment and adjust as needed)
+keywords = ["evolutionary computation", "multi-objective optimisation", "many-objective optimisation", "genetic algorithms", "Pareto front", "decision making"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/djw213/ECVis"
+Documentation = "https://ecvis.readthedocs.io"
+Issues = "https://github.com/djw213/ECVis/issues"
+
+# ---- setuptools configuration ----
+[tool.setuptools]
+# Nothing needed here for most simple projects, but you can add options later.
+
+[tool.setuptools.packages.find]
+where = ["src"]                               # <— src layout
+include = ["ecvis*"]                          # packages to include
+exclude = ["tests*"]                          # optional
+
+[tool.setuptools.package-data]
+# If you ship non-Python files inside your package, list globs here.
+# "ecvis" = ["py.typed", "data/*.json"]
+
+# If you ship type hints as a marker file:
+# [tool.setuptools]
+# include-package-data = true
